@@ -1,8 +1,13 @@
-#!/usr/bin/env python3
+# original DHT11 sensor script (Claude Opus 4.1)
+
 """
-DHT11 Temperature and Humidity Sensor Data Logger
-Compatible with Python 3.11 and Raspberry Pi Zero W
+testing environment: Raspberry Pi Zero W
+                 OS: Raspberry Pi OS / Debian 12 (bookworm)
+             Python: 3.11.x
 """
+
+# NOTE: THIS USES THE ADAFRUIT-BLINKA AND PULSEIO LIBRARIES
+# WHICH DO NOT WORK ON DEBIAN 13 / TRIXIE (libgpiod.so.2 strictly required)
 
 import time
 import board
