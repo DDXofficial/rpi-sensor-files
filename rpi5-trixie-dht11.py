@@ -1,5 +1,5 @@
 # new DHT11 script for Raspberry Pi 5 (Gemini 2.5 Pro)
-# to add: logging (CSV, JSON, et al.) - date/time
+# to add: logging (CSV, JSON, et al.)
 
 """
 testing environment: Raspberry Pi 5
@@ -55,6 +55,9 @@ while True:
         else:
             print("Failed to retrieve data from sensor. Retrying...")
 
+    # Time delay between readings (minimum 2 seconds for DHT11)
+        time.sleep(2.0)
+
     except RuntimeError as error:
         # Errors happen fairly often with DHT sensors due to timing.
         # This is a normal part of their operation.
@@ -63,6 +66,10 @@ while True:
         # Handle other potential errors and perform a clean exit.
         dht_sensor.exit()
         raise error
+    except KeyboardInterrupt:
+        print("")
+        dht_sensor.exit()
+        sys.exit(0)
 
-    # Time delay between readings (minimum 2 seconds for DHT11)
-    time.sleep(2.0)
+    
+
