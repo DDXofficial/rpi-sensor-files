@@ -7,11 +7,14 @@ testing environment: Raspberry Pi 5
              Python: 3.13.x
 """
 
+# core libraries
 import time
-from datetime import datetime
 import board
 import adafruit_dht
 import sys
+
+# new imports
+from datetime import datetime
 
 # --- Configuration ---
 # The GPIO pin number the DHT11 data pin is connected to.
