@@ -1,10 +1,9 @@
 # new DHT22 script for Raspberry Pi 5 (Gemini 2.5 Pro)
-# to add: (TBD)
 
 """
 testing environment: Raspberry Pi 5
                  OS: Raspberry Pi OS / Debian 13 (trixie)
-             Python: 3.13.x (ensured compatibility with Python 3.11 for other testing environments)
+             Python: 3.13.x (ensured compatibility with Python 3.10 for other testing environments)
 """
 
 import time
@@ -23,7 +22,7 @@ SENSOR_PIN = board.D4
 SAMPLE_INTERVAL = 3
 
 # The name of the CSV file to log data to.
-CSV_FILE_PATH = "dht22_log.csv"
+LOG_BASENAME = "dht22_log.csv"
 
 # --- Main Script ---
 def main():
@@ -31,6 +30,23 @@ def main():
     Initializes the sensor, sets up the CSV file, and enters a loop
     to read and log sensor data.
     """
+
+    print("DHT22 RPi Data Logger Version 0.0.1 - by DDX")
+    print("")
+
+    print(f"GPIO pin: {SENSOR_PIN.id}")
+    print(f"Sample interval: {SAMPLE_INTERVAL} seconds")
+    print("")
+
+    # --- NEW: Generate a unique, timestamped filename ---
+    try:
+        # Format the current time for a filename
+        run_timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        CSV_FILE_PATH = f"{run_timestamp}_{LOG_BASENAME}"
+    except Exception as e:
+        print(f"Error generating timestamp for log file: {e}")
+        return
+
     # Initialize the DHT22 sensor object.
     # The 'use_pulseio=False' argument is crucial for modern Raspberry Pi OS
     # and ensures it uses the digitalio backend.
@@ -44,21 +60,21 @@ def main():
         print(f"An unexpected error occurred during sensor initialization: {e}")
         return
 
-    # Set up the CSV file with headers if it doesn't exist
-    file_exists = os.path.isfile(CSV_FILE_PATH)
-    if not file_exists:
-        try:
-            with open(CSV_FILE_PATH, mode='w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(['Timestamp', 'Temperature-C', 'Temperature-F', 'Humidity_Percent'])
-            print(f"Created new log file: {CSV_FILE_PATH}")
-        except IOError as e:
-            print(f"Error: Could not create log file. Check permissions.")
-            print(f"Details: {e}")
-            return
-            
+    # --- NEW: Always create a new file and write the header ---
+    try:
+        with open(CSV_FILE_PATH, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Timestamp', 'Temperature-C', 'Temperature-F', 'Humidity_Percent'])
+        print(f"Logging to new file: {CSV_FILE_PATH}")
+    except IOError as e:
+        print(f"Error: Could not create log file. Check permissions.")
+        print(f"Details: {e}")
+        return
+
+    print("")
     print("--- Starting Temperature & Humidity Logging ---")
     print("Press Ctrl+C to stop.")
+    print("")
 
     try:
         while True:
