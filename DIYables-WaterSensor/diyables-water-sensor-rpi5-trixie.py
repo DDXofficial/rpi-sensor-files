@@ -1,4 +1,5 @@
 # DIYables Water Sensor + Adafruit ADS1115 script (Gemini 2.5 Pro)
+# to add: logging and such!
 
 """
 testing environment: Raspberry Pi 5
@@ -35,7 +36,7 @@ except ValueError:
     print("I2C Error: ADS1115 not found. Check your wiring!")
     exit()
 
-# Create an analog input channel on pin A0
+# Create an analog input channel on pin A3
 chan = AnalogIn(ads, 3)
 
 # Setup the sensor power pin as an output

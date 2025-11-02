@@ -62,7 +62,7 @@ def main():
 
     # --- NEW: 'logs' directory ---
     try:
-        logs_dir = "logs"
+        logs_dir = "/home/ddx/Documents/py-general/dht22-sensor-logs"
         os.makedirs(logs_dir, exist_ok=True)
         CSV_DIR_FILE_PATH = os.path.join(logs_dir, CSV_FILE_PATH)
     except Exception as e:
@@ -74,7 +74,7 @@ def main():
         with open(CSV_DIR_FILE_PATH, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(['Timestamp', 'Temperature-C', 'Temperature-F', 'Humidity_Percent'])
-        print(f"Logging to new file: {CSV_FILE_PATH}")
+        print(f"Logging to new file: {CSV_DIR_FILE_PATH}")
     except IOError as e:
         print(f"Error: Could not create log file. Check permissions.")
         print(f"Details: {e}")
