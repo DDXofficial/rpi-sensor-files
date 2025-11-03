@@ -36,8 +36,8 @@ except ValueError:
     print("I2C Error: ADS1115 not found. Check your wiring!")
     exit()
 
-# Create an analog input channel on pin A3
-chan = AnalogIn(ads, 3)
+# Create an analog input channel on pin A0
+chan = AnalogIn(ads, 0)
 
 # Setup the sensor power pin as an output
 sensor_power = digitalio.DigitalInOut(SENSOR_POWER_PIN)
