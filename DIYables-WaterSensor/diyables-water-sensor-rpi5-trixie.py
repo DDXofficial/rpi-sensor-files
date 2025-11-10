@@ -22,7 +22,8 @@ SENSOR_POWER_PIN = board.D17
 
 # This is a placeholder. You MUST calibrate this value!
 # See the calibration section below.
-WATER_THRESHOLD = 4500  
+# Recalibrated on 2025-11-10
+WATER_THRESHOLD = 4000  
 
 # --- Setup ---
 
