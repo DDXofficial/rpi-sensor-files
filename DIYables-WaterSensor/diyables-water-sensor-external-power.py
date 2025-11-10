@@ -1,10 +1,10 @@
-# DIYables Water Sensor + Adafruit ADS1115 script (Gemini 2.5 Pro)
-# USE THIS SCRIPT WHEN POWERING BOTH THE ADS1115 AND THE SENSOR VIA RPI
+# DIYables Water Sensor + Adafruit ADS1115 script (Gemini 2.5 Pro) (water sensor powered externally)
+# EXPERIMENT FAILED - SCRIPT WILL NOT BE USED
 
 """
 testing environment: Raspberry Pi 5
                  OS: Raspberry Pi OS / Debian 13 (trixie)
-             Python: 3.13.x (ensured compatibility with Python 3.9 for other testing environments)
+             Python: 3.13.x (ensured compatibility with Python 3.10 for other testing environments)
 """
 
 import time
@@ -18,7 +18,7 @@ from adafruit_ads1x15.analog_in import AnalogIn
 # --- Configuration ---
 
 # This is the GPIO pin powering the sensor (VCC)
-SENSOR_POWER_PIN = board.D17 
+#SENSOR_POWER_PIN = board.D17 
 
 # This is a placeholder. You MUST calibrate this value!
 # See the calibration section below.
@@ -42,11 +42,11 @@ except ValueError:
 # A1: (ads, 1)
 # A2: (ads, 2)
 # A3: (ads, 3)
-chan = AnalogIn(ads, 0)
+chan0 = AnalogIn(ads, 0)
 
 # Setup the sensor power pin as an output
-sensor_power = digitalio.DigitalInOut(SENSOR_POWER_PIN)
-sensor_power.direction = digitalio.Direction.OUTPUT
+#sensor_power = digitalio.DigitalInOut(SENSOR_POWER_PIN)
+#sensor_power.direction = digitalio.Direction.OUTPUT
 
 print("Water sensor test script running.")
 print("Press Ctrl+C to exit.\n")
@@ -56,17 +56,17 @@ print("Press Ctrl+C to exit.\n")
 try:
     while True:
         # Power ON the sensor
-        sensor_power.value = True
+        #sensor_power.value = True
         
         # Wait a fraction of a second for the sensor to stabilize
         time.sleep(0.1) 
         
         # Read the raw analog value
         # The ADS1115 gives a 16-bit value (0-65535)
-        raw_value = chan.value
+        raw_value_0 = chan0.value
         
         # Power OFF the sensor to prevent corrosion
-        sensor_power.value = False
+        #sensor_power.value = False
 
         # Timestamp
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -74,10 +74,10 @@ try:
         # --- Logic ---
         print(f"Time: {timestamp}")
 
-        if raw_value > WATER_THRESHOLD:
-            print(f"Sensor Value: {raw_value} - WATER DETECTED\n")
+        if raw_value_0 > WATER_THRESHOLD:
+            print(f"Sensor Value: {raw_value_0} - WATER DETECTED\n")
         else:
-            print(f"Sensor Value: {raw_value} - Dry\n")
+            print(f"Sensor Value: {raw_value_0} - Dry\n")
         
         # Wait 3 seconds before the next reading
         # (same value as DHT22 script)
@@ -85,4 +85,4 @@ try:
 
 except KeyboardInterrupt:
     print("Script stopped by user.")
-    sensor_power.value = False # Ensure sensor is off
+    #sensor_power.value = False # Ensure sensor is off
