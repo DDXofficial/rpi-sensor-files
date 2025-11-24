@@ -18,12 +18,15 @@ from adafruit_ads1x15.analog_in import AnalogIn
 # --- Configuration ---
 
 # This is the GPIO pin powering the sensor (VCC)
-SENSOR_POWER_PIN = board.D17 
+#SENSOR_POWER_PIN = board.D17 
 
 # This is a placeholder. You MUST calibrate this value!
 # See the calibration section below.
 # Recalibrated on 2025-11-10
-WATER_THRESHOLD = 4000  
+WATER_THRESHOLD = 3500
+WATER_THRESHOLD_LIMIT = 14000
+
+WATER_PRESENCE_RANGE = WATER_THRESHOLD_LIMIT - WATER_THRESHOLD
 
 # --- Setup ---
 
@@ -46,8 +49,8 @@ except ValueError:
 chan = AnalogIn(ads, 0)
 
 # Setup the sensor power pin as an output
-sensor_power = digitalio.DigitalInOut(SENSOR_POWER_PIN)
-sensor_power.direction = digitalio.Direction.OUTPUT
+# sensor_power = digitalio.DigitalInOut(SENSOR_POWER_PIN)
+# sensor_power.direction = digitalio.Direction.OUTPUT
 
 print("Water sensor test script running.")
 print("Press Ctrl+C to exit.\n")
@@ -57,7 +60,7 @@ print("Press Ctrl+C to exit.\n")
 try:
     while True:
         # Power ON the sensor
-        sensor_power.value = True
+        # sensor_power.value = True
         
         # Wait a fraction of a second for the sensor to stabilize
         time.sleep(0.1) 
@@ -67,7 +70,7 @@ try:
         raw_value = chan.value
         
         # Power OFF the sensor to prevent corrosion
-        sensor_power.value = False
+        # sensor_power.value = False
 
         # Timestamp
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -75,8 +78,10 @@ try:
         # --- Logic ---
         print(f"Time: {timestamp}")
 
+        water_presence_percentage = (raw_value - WATER_THRESHOLD) / (WATER_PRESENCE_RANGE) * 100
+
         if raw_value > WATER_THRESHOLD:
-            print(f"Sensor Value: {raw_value} - WATER DETECTED\n")
+            print(f"Sensor Value: {raw_value} - WATER DETECTED ({water_presence_percentage:.1f}% presence)\n")
         else:
             print(f"Sensor Value: {raw_value} - Dry\n")
         
@@ -86,4 +91,4 @@ try:
 
 except KeyboardInterrupt:
     print("Script stopped by user.")
-    sensor_power.value = False # Ensure sensor is off
+    # sensor_power.value = False # Ensure sensor is off
